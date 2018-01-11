@@ -15,10 +15,18 @@ public class YellScrapper {
 
   private UserAgent userAgent;
   private List<Company> result;
+  private int sleeptime;
 
   public YellScrapper(UserAgent userAgent) {
     this.userAgent = userAgent;
     this.result = new ArrayList<>();
+    this.sleeptime = 0;
+  }
+
+  public YellScrapper(UserAgent userAgent, int sleeptime) {
+    this.userAgent = userAgent;
+    this.result = new ArrayList<>();
+    this.sleeptime = sleeptime;
   }
 
   public List<Company> getResult() {
@@ -30,7 +38,7 @@ public class YellScrapper {
       for (int i = 1; i <= 1; i++) {
         this.crawl(keyword, location, i);
         System.out.println("Crawled 1 page.");
-        TimeUnit.SECONDS.sleep(5);
+        TimeUnit.SECONDS.sleep(sleeptime);
       }
     } catch (Exception e) {
       e.printStackTrace();
