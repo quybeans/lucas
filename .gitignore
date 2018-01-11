@@ -1,0 +1,11 @@
+# Build files
+log/
+target/
+
+# Intellij files
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
