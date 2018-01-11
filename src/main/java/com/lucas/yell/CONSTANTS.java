@@ -12,4 +12,6 @@ public class CONSTANTS {
 
   protected static final String WEBSITE_DIV = "<div class=.*\\bicon-Business-website\\b.*>";
   protected static final String ATT_HREF_A = "<a href>";
+
+  protected static final String ENCODE_METHOD = "UTF-8";
 }

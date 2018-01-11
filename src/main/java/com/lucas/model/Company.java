@@ -11,12 +11,12 @@ public class Company {
   public Company(String name,
                  String phone,
                  Address address,
-                 String email,
+                 String website,
                  String profilePicUrl) {
     this.name = name;
     this.phone = phone;
     this.address = address;
-    this.website = email;
+    this.website = website;
     this.profilePicUrl = profilePicUrl;
   }
 

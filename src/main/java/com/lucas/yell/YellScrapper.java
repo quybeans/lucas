@@ -1,34 +1,50 @@
 package com.lucas.yell;
 
-import com.jaunt.Element;
-import com.jaunt.Elements;
-import com.jaunt.JauntException;
-import com.jaunt.UserAgent;
+import com.jaunt.*;
 import com.lucas.model.Address;
 import com.lucas.model.Company;
 import com.lucas.utils.TextUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class YellScrapper {
 
-  private String generateUrl(String keyword, String location) {
-    return CONSTANTS.BASE_URL + "?keywords=" + keyword + "&location=" + location + "n&scrambleSeed=833794509";
+  private UserAgent userAgent;
+  private List<Company> result;
+
+  public YellScrapper(UserAgent userAgent) {
+    this.userAgent = userAgent;
+    this.result = new ArrayList<>();
   }
 
-  public List<Company> run(String keyword, String location) {
+  public List<Company> getResult() {
+    return this.result;
+  }
 
-    List<Company> result = new ArrayList<>();
-
+  public void run(String keyword, String location) {
     try {
-      UserAgent userAgent = new UserAgent();
-      userAgent.visit(generateUrl(keyword, location));
+      for (int i = 1; i <= 10; i++) {
+        this.crawl(keyword, location, i);
+        System.out.println("Crawled 1 page.");
+        TimeUnit.SECONDS.sleep(5);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
+  private List<Company> crawl(String keyword, String location, int pageNo) {
+    try {
+      this.userAgent.visit(generateUrl(keyword, location, pageNo));
       Elements capsules = userAgent.doc.findEach(CONSTANTS.ARTICLE_BUSINESS_CAPSULE);
 
       capsules.forEach((Element element) -> {
         Company company = extractCompanyInfo(element);
-        result.add(company);
+        this.result.add(company);
       });
     } catch (Exception e) {
       e.printStackTrace();
@@ -58,7 +74,6 @@ public class YellScrapper {
     try {
       return TextUtils.cleanText(capsule.findFirst(query).innerText());
     } catch (JauntException e) {
-      e.printStackTrace();
       return "";
     }
   }
@@ -70,6 +85,17 @@ public class YellScrapper {
       return websiteATag.findAttributeValues(CONSTANTS.ATT_HREF_A).get(0);
     } catch (JauntException | IndexOutOfBoundsException e) {
       return "";
+    }
+  }
+
+  private String generateUrl(String keyword, String location, int pageNo) {
+    try {
+      String keywordEncoded = URLEncoder.encode(keyword, CONSTANTS.ENCODE_METHOD);
+      String locationEncoded = URLEncoder.encode(location, CONSTANTS.ENCODE_METHOD);
+      return CONSTANTS.BASE_URL + "?keywords=" + keywordEncoded + "&location=" + locationEncoded + "&pageNum=" + pageNo;
+    } catch (UnsupportedEncodingException e) {
+      e.fillInStackTrace();
+      return null;
     }
   }
 }
