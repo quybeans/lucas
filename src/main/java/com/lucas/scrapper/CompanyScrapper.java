@@ -29,13 +29,12 @@ public abstract class CompanyScrapper {
     extractCompany();
   }
 
-  private Company extractCompany() {
+  /* TODO complete skeleton for GenericScrapper */
+  private void extractCompany() {
     String name = extractName();
     String phone = extractPhone();
     Address address = extractAddress();
     String website = extractWebsite();
     String profilePicUrl = extractProfilePicUrl();
-
-    return new Company(name, phone, address, website, profilePicUrl);
   }
 }

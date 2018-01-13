@@ -18,6 +18,6 @@ public class LucasScrapper {
     UserAgent userAgent = new UserAgent();
     YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
 
-    yell.run("Pizza", "London");
+    yell.run("Fashion", "Nottingham", "UK", "FSH");
   }
 }

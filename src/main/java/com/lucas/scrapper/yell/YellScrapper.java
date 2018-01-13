@@ -34,10 +34,10 @@ public class YellScrapper {
     this.sleeptime = sleeptime;
   }
 
-  public void run(String keyword, String location) {
+  public void run(String keyword, String locationKeyword, String countryCode, String categoryCode) {
     try {
       for (int i = 1; i <= 10; i++) {
-        List<Company> companies = this.crawl(keyword, location, i);
+        List<Company> companies = this.crawl(keyword, locationKeyword, countryCode, categoryCode, i);
         System.out.println("Crawled a page, writing to database.");
         writeToDb(this.daoManager, companies);
 
@@ -49,14 +49,14 @@ public class YellScrapper {
     }
   }
 
-  private List<Company> crawl(String keyword, String location, int pageNo) {
+  private List<Company> crawl(String keyword, String location, String countryCode, String categoryCode, int pageNo) {
     List<Company> result = new ArrayList<>();
     try {
       this.userAgent.visit(generateUrl(keyword, location, pageNo));
       Elements capsules = userAgent.doc.findEach(CONSTANTS.ARTICLE_BUSINESS_CAPSULE);
 
       capsules.forEach((Element element) -> {
-        Company company = extractCompanyInfo(element);
+        Company company = extractCompanyInfo(element, countryCode, categoryCode);
         result.add(company);
       });
     } catch (Exception e) {
@@ -66,7 +66,7 @@ public class YellScrapper {
     return result;
   }
 
-  private Company extractCompanyInfo(Element capsule) {
+  private Company extractCompanyInfo(Element capsule, String countryCode, String categoryCode) {
     try {
       String name = extractValue(capsule, CONSTANTS.CAPSULE_TIT);
       String addressString = extractValue(capsule, CONSTANTS.STREET_ADDRESS);
@@ -74,9 +74,10 @@ public class YellScrapper {
       String postalCode = extractValue(capsule, CONSTANTS.POSTAL_CODE);
       String phone = extractValue(capsule, CONSTANTS.SPAN_TEL);
       String website = findWebsite(capsule);
+      String thumbnail = extractThumbnail(capsule);
 
-      Address address = new Address(addressString, location, postalCode);
-      return new Company(name, phone, address, website, "");
+      Address address = new Address(addressString, location, postalCode, countryCode);
+      return new Company(name, phone, address, website, thumbnail, countryCode, categoryCode, "", "");
     } catch (Exception e) {
       e.printStackTrace();
       return null;
@@ -87,6 +88,19 @@ public class YellScrapper {
     try {
       return TextUtils.cleanText(capsule.findFirst(query).innerText());
     } catch (JauntException e) {
+      return "";
+    }
+  }
+
+  private String extractThumbnail(Element capsule) {
+    try {
+      String url = capsule.findFirst(CONSTANTS.DIV_LEFT_SIDE).findAttributeValues(CONSTANTS.IMG_SRC).get(0);
+      if (!url.equals(CONSTANTS.DUMMY_IMG_SRC)) {
+        return url;
+      } else {
+        return "";
+      }
+    } catch (JauntException | IndexOutOfBoundsException e) {
       return "";
     }
   }

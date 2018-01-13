@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CompanyDAO extends GenericDAO<Company> {
 
-  private final static String TABLENAME = "yell_company";
+  private final static String TABLENAME = "Company";
 
   public CompanyDAO(Connection con) {
     super(con, TABLENAME);
@@ -37,9 +37,17 @@ public class CompanyDAO extends GenericDAO<Company> {
         String postalCode = rs.getString("postal");
         String website = rs.getString("website");
         String profileImgUrl = rs.getString("avatar");
+        String nationCode = rs.getString("nationCode");
+        String categoryCode = rs.getString("categoryCode");
+        String email = rs.getString("email");
+        String description  = rs.getString("description");
 
-        Address address = new Address(streetAddress, location, postalCode);
-        result.add(new Company(name, phone, address, website, profileImgUrl));
+        Address address = new Address(streetAddress, location, postalCode, nationCode);
+        result.add(new Company(
+            name, phone, address, website,
+            profileImgUrl, nationCode, categoryCode,
+            email, description
+        ));
       }
     } catch (SQLException e) {
       e.printStackTrace();
@@ -52,19 +60,23 @@ public class CompanyDAO extends GenericDAO<Company> {
   public int create(Company company) {
     String query = "INSERT INTO "
         + this.tableName
-        + " (name, phone, address, location, postal, website, avatar)"
-        + " VALUES (?, ?, ?, ?, ?, ?, ?)";
+        + " (name, ownerId, phone, address, city,"
+        + " nationCode, website, thumbnail, categoryCode, status)"
+        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     PreparedStatement stmt = null;
     try {
       stmt = conn.prepareStatement(query);
       stmt.setString(1, company.getName());
-      stmt.setString(2, company.getPhone());
-      stmt.setString(3, company.getAddress().getStreetAddress());
-      stmt.setString(4, company.getAddress().getLocation());
-      stmt.setString(5, company.getAddress().getPostalCode());
-      stmt.setString(6, company.getWebsite());
-      stmt.setString(7, company.getProfilePicUrl());
+      stmt.setString(2, "admin");
+      stmt.setString(3, company.getPhone());
+      stmt.setString(4, company.getAddress().getStreetAddress());
+      stmt.setString(5, company.getAddress().getCity());
+      stmt.setString(6, company.getAddress().getNationCode());
+      stmt.setString(7, company.getWebsite());
+      stmt.setString(8, company.getProfilePicUrl());
+      stmt.setString(9, company.getCategoryCode());
+      stmt.setString(10, "FRESH");
 
       return stmt.executeUpdate();
     } catch (SQLException e) {

@@ -11,9 +11,9 @@ CREATE TABLE yell_company (
 )
 
 -- Table: Company
-CREATE TABLE company (
+CREATE TABLE Company (
     id int  IDENTITY(1,1) NOT NULL,
-    categoryCodes nvarchar(80)  NOT NULL,
+    categoryCode nvarchar(80)  NOT NULL,
     ownerId varchar(50)  NOT NULL,
     name nvarchar(200)  NOT NULL,
     companyType varchar(20)  NULL,
@@ -21,13 +21,14 @@ CREATE TABLE company (
     phone varchar(13)  NULL,
     email varchar(345)  NULL,
     description nvarchar(600)  NULL,
-    address nvarchar(200)  NULL,
+    website varchar(255) NULL,
     thumbnail varchar(300)  NULL,
     picture varchar(300)  NULL,
     rating real  NULL,
 
-    nationCode varchar(3)  NOT NULL,
+    address nvarchar(200)  NULL,
     city varchar(40)  NULL,
+    nationCode varchar(3)  NOT NULL,
 
     status varchar(15)  NOT NULL,
 

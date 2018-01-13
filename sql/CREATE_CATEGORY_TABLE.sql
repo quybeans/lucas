@@ -13,4 +13,6 @@ VALUES
     ('F&B', 'Food and Beverage', 'Drinking and food, non alcohol.'),
 		('IT', 'Information technology', 'IT stuffs, guys with glasses.'),
 		('EDU', 'Education', 'Teaching insitute, school ...'),
-		('POR', 'Pornography', 'Adults stuff.')
+		('POR', 'Pornography', 'Adults stuff.'),
+		('AUT', 'Automobile (cars)', 'Vehicles industry.'),
+		('FSH', 'Fashion', 'Ladies favorite.')
