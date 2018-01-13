@@ -9,10 +9,10 @@ public abstract class GenericDAO<T> {
   public abstract ArrayList<T> getAll() throws SQLException;
   public abstract int create(T item) throws SQLException;
 
-  protected final String tableName;
-  protected Connection conn;
+  final String tableName;
+  Connection conn;
 
-  protected GenericDAO(Connection conn, String tableName) {
+  GenericDAO(Connection conn, String tableName) {
     this.tableName = tableName;
     this.conn = conn;
   }

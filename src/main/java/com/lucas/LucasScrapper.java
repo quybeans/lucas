@@ -4,12 +4,11 @@ import com.jaunt.UserAgent;
 import com.lucas.db.DAOManager;
 import com.lucas.model.Company;
 import com.lucas.utils.DbConnector;
-import com.lucas.yell.YellScrapper;
+import com.lucas.scrapper.yell.YellScrapper;
 
 import java.sql.Connection;
 
 public class LucasScrapper {
-
 
   public static void main(String[] args) {
 
@@ -21,6 +20,7 @@ public class LucasScrapper {
     YellScrapper yell = new YellScrapper(userAgent, 5);
 
     yell.run("Pizza", "London");
+
     yell.getResult().forEach((Company company) -> {
       Connection connection = new DbConnector(url, username, password).connect();
       DAOManager daoManager = new DAOManager(connection);

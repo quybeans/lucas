@@ -1,4 +1,4 @@
-package com.lucas.yell;
+package com.lucas.scrapper.yell;
 
 import com.jaunt.*;
 import com.lucas.model.Address;
@@ -35,9 +35,8 @@ public class YellScrapper {
 
   public void run(String keyword, String location) {
     try {
-      for (int i = 1; i <= 1; i++) {
+      for (int i = 1; i <= 10; i++) {
         this.crawl(keyword, location, i);
-        System.out.println("Crawled 1 page.");
         TimeUnit.SECONDS.sleep(sleeptime);
       }
     } catch (Exception e) {

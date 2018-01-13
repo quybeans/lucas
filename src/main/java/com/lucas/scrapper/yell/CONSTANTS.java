@@ -1,4 +1,4 @@
-package com.lucas.yell;
+package com.lucas.scrapper.yell;
 
 public class CONSTANTS {
   protected static final String BASE_URL = "https://www.yell.com/ucs/UcsSearchAction.do";
