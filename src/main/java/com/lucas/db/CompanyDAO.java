@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 public class CompanyDAO extends GenericDAO<Company> {
 
-  private final static String TABLENAME = "company";
+  private final static String TABLENAME = "yell_company";
 
   public CompanyDAO(Connection con) {
     super(con, TABLENAME);

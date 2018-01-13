@@ -1,35 +1,42 @@
 package com.lucas.db;
 
+import com.lucas.utils.DbConnector;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class DAOManager {
 
-  private Connection connection = null;
-  private CompanyDAO companyDAO = null;
+  private DbConnector connector;
+  private CompanyDAO companyDAO;
 
-  public DAOManager(Connection connection) {
-    this.connection = connection;
+  public DAOManager(DbConnector connector) {
+    this.connector = connector;
+    this.companyDAO = null;
   }
 
   public CompanyDAO getCompanyDAO() {
     if (this.companyDAO == null) {
-      this.companyDAO = new CompanyDAO(this.connection);
+      this.companyDAO = new CompanyDAO(connector.connect());
     }
 
-    return companyDAO;
+    return this.companyDAO;
   }
 
   public Object executeAndClose(DAOCommand command) {
     try{
-      return command.execute(this);
+      return execute(command);
     } finally {
-      try {
-        this.connection.close();
-      } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Connection might be closed.");
-      }
+      closeConnection();
     }
+  }
+
+  public Object execute(DAOCommand command) {
+    return command.execute(this);
+  }
+
+  public void closeConnection() {
+    this.companyDAO = null;
+    this.connector.close();
   }
 }

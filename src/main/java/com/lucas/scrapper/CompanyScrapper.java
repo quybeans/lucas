@@ -6,11 +6,11 @@ import com.lucas.model.Company;
 
 public abstract class CompanyScrapper {
 
-  public abstract String extractName();
-  public abstract String extractPhone();
-  public abstract Address extractAddress();
-  public abstract String extractWebsite();
-  public abstract String extractProfilePicUrl();
+  abstract String extractName();
+  abstract String extractPhone();
+  abstract Address extractAddress();
+  abstract String extractWebsite();
+  abstract String extractProfilePicUrl();
 
   private final UserAgent agent;
   private final int sleep;

@@ -1,6 +1,11 @@
 package com.lucas.scrapper.yell;
 
-import com.jaunt.*;
+import com.jaunt.Element;
+import com.jaunt.Elements;
+import com.jaunt.JauntException;
+import com.jaunt.UserAgent;
+import com.lucas.db.CompanyDAO;
+import com.lucas.db.DAOManager;
 import com.lucas.model.Address;
 import com.lucas.model.Company;
 import com.lucas.utils.TextUtils;
@@ -14,29 +19,29 @@ import java.util.concurrent.TimeUnit;
 public class YellScrapper {
 
   private UserAgent userAgent;
-  private List<Company> result;
   private int sleeptime;
+  private DAOManager daoManager;
 
-  public YellScrapper(UserAgent userAgent) {
+  public YellScrapper(UserAgent userAgent, DAOManager daoManager) {
     this.userAgent = userAgent;
-    this.result = new ArrayList<>();
+    this.daoManager = daoManager;
     this.sleeptime = 0;
   }
 
-  public YellScrapper(UserAgent userAgent, int sleeptime) {
+  public YellScrapper(UserAgent userAgent, DAOManager daoManager, int sleeptime) {
     this.userAgent = userAgent;
-    this.result = new ArrayList<>();
+    this.daoManager = daoManager;
     this.sleeptime = sleeptime;
-  }
-
-  public List<Company> getResult() {
-    return this.result;
   }
 
   public void run(String keyword, String location) {
     try {
       for (int i = 1; i <= 10; i++) {
-        this.crawl(keyword, location, i);
+        List<Company> companies = this.crawl(keyword, location, i);
+        System.out.println("Crawled a page, writing to database.");
+        writeToDb(this.daoManager, companies);
+
+        System.out.println("Crawled a page, sleep for " + this.sleeptime + " seconds.");
         TimeUnit.SECONDS.sleep(sleeptime);
       }
     } catch (Exception e) {
@@ -45,13 +50,14 @@ public class YellScrapper {
   }
 
   private List<Company> crawl(String keyword, String location, int pageNo) {
+    List<Company> result = new ArrayList<>();
     try {
       this.userAgent.visit(generateUrl(keyword, location, pageNo));
       Elements capsules = userAgent.doc.findEach(CONSTANTS.ARTICLE_BUSINESS_CAPSULE);
 
       capsules.forEach((Element element) -> {
         Company company = extractCompanyInfo(element);
-        this.result.add(company);
+        result.add(company);
       });
     } catch (Exception e) {
       e.printStackTrace();
@@ -103,6 +109,18 @@ public class YellScrapper {
     } catch (UnsupportedEncodingException e) {
       e.fillInStackTrace();
       return null;
+    }
+  }
+
+  private void writeToDb(DAOManager daoManager, List<Company> companies) {
+    try {
+      CompanyDAO companyDao = daoManager.getCompanyDAO(); // Open connection to db
+      companies.forEach((Company company) -> {
+            daoManager.execute((DAOManager manager) -> companyDao.create(company));
+          }
+      );
+    } finally {
+      daoManager.closeConnection();
     }
   }
 }

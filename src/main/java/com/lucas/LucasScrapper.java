@@ -2,29 +2,22 @@ package com.lucas;
 
 import com.jaunt.UserAgent;
 import com.lucas.db.DAOManager;
-import com.lucas.model.Company;
-import com.lucas.utils.DbConnector;
 import com.lucas.scrapper.yell.YellScrapper;
-
-import java.sql.Connection;
+import com.lucas.utils.DbConnector;
 
 public class LucasScrapper {
 
   public static void main(String[] args) {
 
-    String username = "sa";
-    String password = "Bikini123!";
-    String url = "jdbc:sqlserver://localhost:32772;databaseName=psn";
+    String username = "beaniekun";
+    String password = "Bikini123";
+    String url = "jdbc:sqlserver://psn.cuzla8tgewqx.ap-southeast-1.rds.amazonaws.com:3012;databaseName=psn";
 
+    DbConnector connector = new DbConnector(url, username, password);
+    DAOManager daoManager = new DAOManager(connector);
     UserAgent userAgent = new UserAgent();
-    YellScrapper yell = new YellScrapper(userAgent, 5);
+    YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
 
     yell.run("Pizza", "London");
-
-    yell.getResult().forEach((Company company) -> {
-      Connection connection = new DbConnector(url, username, password).connect();
-      DAOManager daoManager = new DAOManager(connection);
-      daoManager.executeAndClose((DAOManager manager) -> daoManager.getCompanyDAO().create(company));
-    });
   }
 }
