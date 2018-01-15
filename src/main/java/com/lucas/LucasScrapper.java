@@ -2,6 +2,7 @@ package com.lucas;
 
 import com.jaunt.UserAgent;
 import com.lucas.db.DAOManager;
+import com.lucas.scrapper.trangvang.CategoryScrapper;
 import com.lucas.scrapper.yell.YellScrapper;
 import com.lucas.utils.DbConnector;
 
@@ -16,8 +17,9 @@ public class LucasScrapper {
     DbConnector connector = new DbConnector(url, username, password);
     DAOManager daoManager = new DAOManager(connector);
     UserAgent userAgent = new UserAgent();
-    YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
-
-    yell.run("Fashion", "Nottingham", "UK", "FSH");
+//    YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
+//
+//    yell.run("Fashion", "Nottingham", "UK", "FSH");
+    CategoryScrapper.launch(daoManager);
   }
 }

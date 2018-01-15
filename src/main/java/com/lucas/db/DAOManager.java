@@ -9,6 +9,7 @@ public class DAOManager {
 
   private DbConnector connector;
   private CompanyDAO companyDAO;
+  private TrangVangCategoryDAO trangVangCategoryDAO;
 
   public DAOManager(DbConnector connector) {
     this.connector = connector;
@@ -22,6 +23,15 @@ public class DAOManager {
 
     return this.companyDAO;
   }
+
+  public TrangVangCategoryDAO getTrangVangCategoryDAO() {
+    if (this.trangVangCategoryDAO == null) {
+      this.trangVangCategoryDAO = new TrangVangCategoryDAO(connector.connect());
+    }
+
+    return this.trangVangCategoryDAO;
+  }
+
 
   public Object executeAndClose(DAOCommand command) {
     try{
@@ -37,6 +47,7 @@ public class DAOManager {
 
   public void closeConnection() {
     this.companyDAO = null;
+    this.trangVangCategoryDAO = null;
     this.connector.close();
   }
 }
