@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class YellScrapper {
@@ -130,8 +131,9 @@ public class YellScrapper {
     try {
       CompanyDAO companyDao = daoManager.getCompanyDAO(); // Open connection to db
       companies.forEach((Company company) -> {
-            daoManager.execute((DAOManager manager) -> companyDao.create(company));
-          }
+          String id = UUID.randomUUID().toString();
+          daoManager.execute((DAOManager manager) -> companyDao.create(id, company));
+        }
       );
     } finally {
       daoManager.closeConnection();

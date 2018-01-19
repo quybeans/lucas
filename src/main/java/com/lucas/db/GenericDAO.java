@@ -7,7 +7,7 @@ import java.util.ArrayList;
 public abstract class GenericDAO<T> {
 
   public abstract ArrayList<T> getAll() throws SQLException;
-  public abstract int create(T item) throws SQLException;
+  public abstract int create(String id, T item) throws SQLException;
 
   final String tableName;
   Connection conn;

@@ -57,26 +57,27 @@ public class CompanyDAO extends GenericDAO<Company> {
   }
 
   @Override
-  public int create(Company company) {
+  public int create(String id, Company company) {
     String query = "INSERT INTO "
         + this.tableName
-        + " (name, ownerId, phone, address, city,"
+        + " (id, name, ownerId, phone, address, city,"
         + " nationCode, website, thumbnail, categoryCode, status)"
-        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        + " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-    PreparedStatement stmt = null;
+    PreparedStatement stmt;
     try {
       stmt = conn.prepareStatement(query);
-      stmt.setString(1, company.getName());
-      stmt.setString(2, "admin");
-      stmt.setString(3, company.getPhone());
-      stmt.setString(4, company.getAddress().getStreetAddress());
-      stmt.setString(5, company.getAddress().getCity());
-      stmt.setString(6, company.getAddress().getNationCode());
-      stmt.setString(7, company.getWebsite());
-      stmt.setString(8, company.getProfilePicUrl());
-      stmt.setString(9, company.getCategoryCode());
-      stmt.setString(10, "FRESH");
+      stmt.setString(1, id);
+      stmt.setString(2, company.getName());
+      stmt.setString(3, "admin");
+      stmt.setString(4, company.getPhone());
+      stmt.setString(5, company.getAddress().getStreetAddress());
+      stmt.setString(6, company.getAddress().getCity());
+      stmt.setString(7, company.getAddress().getNationCode());
+      stmt.setString(8, company.getWebsite());
+      stmt.setString(9, company.getProfilePicUrl());
+      stmt.setString(10, company.getCategoryCode());
+      stmt.setString(11, "OPEN");
 
       return stmt.executeUpdate();
     } catch (SQLException e) {

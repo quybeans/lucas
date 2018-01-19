@@ -5,6 +5,8 @@ import com.lucas.db.DAOManager;
 import com.lucas.scrapper.yell.YellScrapper;
 import com.lucas.utils.DbConnector;
 
+import java.util.Scanner;
+
 public class LucasScrapper {
 
   public static void main(String[] args) {
@@ -16,8 +18,32 @@ public class LucasScrapper {
     DbConnector connector = new DbConnector(url, username, password);
     DAOManager daoManager = new DAOManager(connector);
     UserAgent userAgent = new UserAgent();
-    YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
+    Scanner s = new Scanner(System.in);
 
-    yell.run("Fashion", "Nottingham", "UK", "FSH");
+    System.out.println("Welcome to Lucas scrapper, this is a part of PSN project.");
+    System.out.println("-----------------------------------------------");
+    System.out.println("First, Select the yellow page you want to crawl");
+    System.out.println("1. Yell.com");
+    System.out.println("-----------------------------------------------");
+
+    int pageSelect = s.nextInt();
+
+      switch (pageSelect) {
+        case 1:
+          System.out.println("Yell scrapper selected.");
+          System.out.println("Type the location: ");
+          String location = s.next();
+
+          System.out.println("Type the keyword: ");
+          String keyword = s.next();
+
+          System.out.println("Type the category key: ");
+          String cateCode = s.next();
+
+          YellScrapper yell = new YellScrapper(userAgent, daoManager, 5);
+          yell.run(keyword, location, "GBR", cateCode);
+
+          break;
+      }
   }
 }
