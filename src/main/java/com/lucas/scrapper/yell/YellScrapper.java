@@ -1,9 +1,6 @@
 package com.lucas.scrapper.yell;
 
-import com.jaunt.Element;
-import com.jaunt.Elements;
-import com.jaunt.JauntException;
-import com.jaunt.UserAgent;
+import com.jaunt.*;
 import com.lucas.db.CompanyDAO;
 import com.lucas.db.DAOManager;
 import com.lucas.model.Address;
@@ -53,7 +50,13 @@ public class YellScrapper {
   private List<Company> crawl(String keyword, String location, String countryCode, String categoryCode, int pageNo) {
     List<Company> result = new ArrayList<>();
     try {
-      this.userAgent.visit(generateUrl(keyword, location, pageNo));
+      String url = generateUrl(keyword, location, pageNo);
+      System.out.println(url);
+      try {
+        this.userAgent.visit(url);
+      } catch (ResponseException e) {
+        e.printStackTrace();
+      }
       Elements capsules = userAgent.doc.findEach(CONSTANTS.ARTICLE_BUSINESS_CAPSULE);
 
       capsules.forEach((Element element) -> {
